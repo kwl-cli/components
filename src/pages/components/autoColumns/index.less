@@ -1,0 +1,63 @@
+.settingBox {
+  .normalBox {
+    width: 100%;
+    border: 1px solid rgb(0 0 0 / 15%);
+    border-radius: 4px;
+
+    .normalTitle {
+      border-bottom: 1px solid rgb(0 0 0 / 15%);
+      padding: 0 20px;
+      height: 36px;
+      background: rgb(0 0 0 / 2%);
+      border-radius: 4px 4px 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      > span {
+        font-weight: 500;
+        color: rgb(0 0 0 / 88%);
+        line-height: 20px;
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+.listItem {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 32px;
+  border-bottom: 1px solid rgb(0 0 0 / 6%);
+  padding: 0 12px 0 20px;
+
+  .aitions {
+    flex: 1;
+    color: rgb(0 0 0 / 45%);
+    text-align: right;
+  }
+
+  .listAction {
+    display: none;
+  }
+
+  .listLabel {
+    margin-left: 8px;
+    width: 220px;
+  }
+
+  &:hover {
+    cursor: pointer;
+    background: rgb(24 144 255 / 10%);
+
+    .listAction {
+      margin-right: 8px;
+      display: inline-block;
+    }
+
+    .listLabel {
+      width: 180px;
+    }
+  }
+}

@@ -9,7 +9,7 @@ import {
   SortingState,
   useReactTable,
 } from '@tanstack/react-table';
-import { makeData } from './mockData';
+import { makeData } from '../mockData';
 import styled from '@emotion/styled';
 
 const Index = () => {

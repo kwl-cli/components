@@ -20,9 +20,15 @@
     ]
   },
   "dependencies": {
+    "@alifd/next": "^1.26.23",
     "@ant-design/pro-components": "^2.6.11",
     "@ant-design/pro-layout": "^6.5.0",
+    "@emotion/styled": "^11.11.0",
+    "@faker-js/faker": "^8.0.2",
+    "@minko-fe/use-antd-resizable-header": "^2.8.13",
+    "@tanstack/react-table": "^8.9.3",
     "ahooks": "^3.7.8",
+    "ali-react-table": "^2.6.1",
     "array-move": "^4.0.0",
     "lodash": "^4.17.21",
     "react": "17.x",

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styles from './index.less';
 import { ProTable } from '@ant-design/pro-components';
 import SettingColumns from '../autoColumns';
+import { makeData } from '../mockData';
 
 const Index = ({ tableId }) => {
   useEffect(() => {}, []);
@@ -15,10 +16,10 @@ const Index = ({ tableId }) => {
       initTitle: 'grade',
     },
     {
-      dataIndex: 'name',
+      dataIndex: 'firstName',
       width: 100,
-      title: 'name',
-      initTitle: 'grade',
+      title: 'firstName',
+      initTitle: 'firstName',
     },
     {
       dataIndex: 'age',
@@ -33,9 +34,21 @@ const Index = ({ tableId }) => {
       initTitle: 'grade',
     },
   ];
+
   return (
     <div className={styles.container}>
       <ProTable
+        size="small"
+        search={false}
+        scroll={{ y: 500 }}
+        cardProps={{
+          style: {
+            height: 550,
+            position: 'relative',
+            borderRadius: 4,
+          },
+        }}
+        dataSource={makeData(5)}
         columnsState={{
           value: tableConfig,
           onChange: (value) => {

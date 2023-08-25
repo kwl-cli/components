@@ -3,6 +3,7 @@ import Table from './components/table';
 import { Tabs } from 'antd';
 import ResizableTable from './components/customTable/index';
 import AliReactTable from './components/aliReactTable/index';
+import SortTabs from './components/sortTabs';
 
 export default function IndexPage() {
   const items = [
@@ -16,6 +17,11 @@ export default function IndexPage() {
       label: '项目 3',
       key: 'item-3',
       children: <AliReactTable></AliReactTable>,
+    },
+    {
+      label: '可拖拽tabs',
+      key: 'item-4',
+      children: <SortTabs></SortTabs>,
     },
   ];
   return (

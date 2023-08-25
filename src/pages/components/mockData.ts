@@ -37,8 +37,6 @@ const newPerson = (index: number): Person => {
 };
 
 export function makeData(...lens: number[]) {
-  console.log(lens);
-
   const makeDataLevel = (depth = 0): Person[] => {
     const len = lens[depth]!;
     return range(len).map((d): Person => {

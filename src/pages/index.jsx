@@ -4,6 +4,8 @@ import { Tabs } from 'antd';
 import ResizableTable from './components/customTable/index';
 import AliReactTable from './components/aliReactTable/index';
 import SortTabs from './components/sortTabs';
+import VxeTable from './components/vxeTable';
+// import 'vxe-table/lib/style.css'
 
 export default function IndexPage() {
   const items = [
@@ -22,6 +24,11 @@ export default function IndexPage() {
       label: '可拖拽tabs',
       key: 'item-4',
       children: <SortTabs></SortTabs>,
+    },
+    {
+      label: 'vxeTable',
+      key: 'item-5',
+      children: <VxeTable></VxeTable>,
     },
   ];
   return (

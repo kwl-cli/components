@@ -1,0 +1,120 @@
+.container {
+  border-radius: 4px;
+  border: 1px solid #e5e5e5;
+  :global {
+    .x6-node-selected .node-item {
+      transition: 0.3s;
+      border: 1px solid #1890ff;
+      background: #f6faff;
+    }
+    .x6-widget-selection-box {
+      border: 0px;
+      margin: 0;
+      padding: 0;
+      pointer-events: none !important;
+      border-radius: 4px !important;
+    }
+
+    .x6-edge-selected > path:nth-child(2) {
+      stroke: #1677ff !important;
+    }
+  }
+}
+.dndContainer {
+  width: 240px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  background: #f9f9f9;
+  border-right: 1px solid #e5e5e5;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+}
+
+.dedItem {
+  width: 200px;
+  height: 36px;
+  margin-bottom: 8px;
+  &:hover {
+    cursor: move;
+  }
+
+  :global {
+    .node-item:hover {
+      transition: 0.3s;
+      border: 1px solid #1890ff !important;
+    }
+  }
+}
+
+.dedItemDisabled {
+  width: 200px;
+  height: 36px;
+  margin-bottom: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  color: rgba(0, 0, 0, 0.25);
+  background: rgba(0, 0, 0, 0.04);
+  padding: 0px 12px;
+  border-radius: 4px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  cursor: not-allowed;
+  &:hover {
+    cursor: not-allowed;
+  }
+}
+
+.dedItemDisabled:hover {
+  cursor: not-allowed;
+}
+
+.dedItemDisabled:hover {
+  cursor: not-allowed;
+}
+
+.titleItem {
+  width: 200px;
+  height: 36px;
+  border-bottom: 1px solid #e5e5e5;
+  color: rgba(0, 0, 0, 0.45);
+  height: 36px;
+  padding: 8px 12px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  margin-top: 4px;
+}
+
+:global {
+  .ant-drawer-close {
+    display: none;
+  }
+  .ant-drawer-header {
+    padding: 8px 20px !important;
+  }
+  .node-item {
+    background: #fff;
+    transition: 0.3s;
+    color: #000;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    font-size: 16px;
+    padding: 10px 12px;
+  }
+  .node-label {
+    font-size: 12px;
+    margin-left: 10px;
+    text-wrap: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.dataPreview {
+  display: flex;
+  width: 100%;
+}

@@ -1,0 +1,139 @@
+.actions {
+  font-size: 16px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  height: 49px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  background: #fff;
+  border-bottom: 1px solid #e5e5e5;
+  border-top-right-radius: 4px;
+  .actionsZoom {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &:hover {
+      cursor: pointer;
+      background: rgba(0, 0, 0, 0.06);
+    }
+  }
+}
+
+.add_dataSource {
+  display: flex;
+  height: 100%;
+  width: 100%;
+
+  .title {
+    color: rgba(0, 0, 0, 0.88);
+    font-weight: 500;
+    font-size: 14px;
+  }
+
+  .searchBox {
+    width: 227px;
+    margin: 8px 0 12px 0;
+  }
+
+  .treeBox {
+    padding-right: 8px;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    width: 250px;
+  }
+
+  .fontBox {
+    flex: 1;
+    width: 0;
+    height: 100%;
+    padding: 0 10px;
+    overflow: auto;
+  }
+  .tree_title_box {
+    display: flex;
+    align-items: center;
+  }
+  .tree_title {
+    flex-wrap: nowrap;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 167px;
+    display: inline-block;
+  }
+
+  :global {
+    .ant-checkbox-wrapper {
+      display: flex;
+      align-items: center;
+      .ant-checkbox {
+        top: 0;
+      }
+    }
+
+    .ant-tree-indent {
+      display: none;
+    }
+    .ant-tree .ant-tree-treenode {
+      align-items: center;
+      width: 100%;
+      border-radius: 4px;
+      padding: 0;
+      &:hover {
+        background: rgba(0, 0, 0, 0.04);
+      }
+    }
+
+    .ant-tree .ant-tree-node-content-wrapper {
+      flex: 1;
+      background: transparent;
+      &:hover {
+        background: transparent !important;
+      }
+    }
+    .ant-tree .ant-tree-node-content-wrapper.ant-tree-node-selected {
+      background: transparent;
+    }
+    .ant-tree-treenode-selected {
+      background: rgba(22, 119, 255, 0.1);
+      &:hover {
+        background: rgba(22, 119, 255, 0.1) !important;
+      }
+    }
+
+    .ant-tree-switcher_close .ant-tree-switcher-icon svg {
+      transform: unset;
+    }
+  }
+}
+
+.drawerTitle {
+  display: flex;
+  align-items: center;
+}
+.drawerTitleIcon {
+  width: 24px;
+  height: 24px;
+  background: #1677ff;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 8px;
+  color: #fff;
+}
+
+.drawerBox {
+  :global {
+    .ant-tabs-top > .ant-tabs-nav::before {
+      border-color: transparent;
+    }
+  }
+}

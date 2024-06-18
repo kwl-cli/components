@@ -3,7 +3,7 @@ import React from 'react';
 import { IconNodeExport, IconNodeImport } from './icon';
 
 export const validataForEdge = (node, config, sourceCell) => {
-  if (node.type === 'in' && !config?.selectedKey) {
+  if (node.type === 'in' && !config?.value) {
     // 更改节点数据
     message.error({ key: 'error', content: '请先完成节点配置，再绘制连线' });
     sourceCell.prop('data', { ...node, status: 'error' });

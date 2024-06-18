@@ -1,5 +1,6 @@
 import Icon from '@ant-design/icons';
 import React from 'react';
+import imgBoardExport from './empty/img_board_export_default.svg';
 import file from './icon_file.svg';
 import folder from './icon_folder.svg';
 import folderOpen from './icon_folderOpen.svg';
@@ -17,3 +18,7 @@ export const IconFolderOpen = (props) => (
 );
 export const IconFolder = (props) => <Icon component={folder} {...props} />;
 export const IconFile = (props) => <Icon component={file} {...props} />;
+
+export const emptyIcon = {
+  out: (props) => <Icon component={imgBoardExport} {...props} />,
+};

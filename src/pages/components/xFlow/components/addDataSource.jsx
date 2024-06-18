@@ -1,7 +1,9 @@
-import { useSelections } from 'ahooks';
-import { Checkbox, Col, Empty, Row, Tree, Typography, Input } from 'antd';
+import SpInput from '@src/components/commonComp/submitSearch/SpInput';
+import { useRequest, useSelections } from 'ahooks';
+import { Checkbox, Col, Empty, Row, Spin, Tree, Typography } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
 import { IconFile, IconFolder, IconFolderOpen } from '../icon';
+import { getTemplateDetail } from '../service';
 
 import styles from './index.module.less';
 
@@ -61,23 +63,6 @@ const defaultD = [
   },
 ];
 
-const mockCheckoutList = [
-  {
-    label:
-      '随处可见上课的健身房打卡机随处可见上课的健身房打卡机随处可见上课的健身房打卡机随处可见上课的健身房打卡机',
-    value: '1',
-  },
-  { label: '阿萨德', value: '2' },
-  { label: '阿萨德', value: '3' },
-  { label: '阿萨德', value: '4' },
-  { label: '阿萨德', value: '5' },
-  { label: '阿萨德', value: '6' },
-  { label: '阿萨德', value: '7' },
-  { label: '阿萨德', value: '8' },
-  { label: '阿萨德', value: '9' },
-  { label: '阿萨德', value: '10' },
-];
-
 const Index = ({ onChange: changeValue, value: initValue }) => {
   const [expandedKeys, setExpandedKeys] = useState([]);
   const [selectedKeys, setSelectedKeys] = useState([]);
@@ -85,6 +70,26 @@ const Index = ({ onChange: changeValue, value: initValue }) => {
   const [checkoutAllList, setCheckoutAllList] = useState([]);
   const [searchValue, setSearchValue] = useState('');
   const [defaultData, setDefaultData] = useState(defaultD);
+
+  const { run: getTemplateDetailRun, loading: getTemplateDetailLoading } =
+    useRequest(getTemplateDetail, {
+      manual: true,
+      onSuccess: (res) => {
+        try {
+          const templateJson = JSON.parse(res.data.templateJsonStr).map(
+            (i) => ({
+              label: i.label,
+              value: i.name,
+              config: i,
+            }),
+          );
+          setCheckoutList(templateJson);
+          setCheckoutAllList(templateJson);
+        } catch (error) {
+          console.log('error', error);
+        }
+      },
+    });
 
   const list = useMemo(
     () => (checkoutList || []).map((i) => i?.value),
@@ -101,31 +106,32 @@ const Index = ({ onChange: changeValue, value: initValue }) => {
     partiallySelected,
   } = useSelections(list);
 
-  const changeFormDataValue = (value, key) => {
+  const changeFormDataValue = (value) => {
     changeValue({
       ...initValue,
-      [key]: value,
+      ...value,
     });
   };
 
   useEffect(() => {
     if (selectedKeys.length) {
-      setCheckoutList(mockCheckoutList);
-      setCheckoutAllList(mockCheckoutList);
+      getTemplateDetailRun('22');
     }
-  }, [selectedKeys]);
+  }, [selectedKeys.join(',')]);
 
   useEffect(() => {
-    if (initValue?.checkoutKeys) {
-      setSelected(initValue?.checkoutKeys || []);
+    if (initValue?.cloumns?.length) {
+      setSelected((initValue?.cloumns || []).map((i) => i.value));
     }
-    if (initValue?.selectedKey) {
-      setSelectedKeys([initValue?.selectedKey?.value]);
+    if (initValue?.value) {
+      setSelectedKeys([initValue?.value]);
     }
   }, [JSON.stringify(initValue)]);
 
   useEffect(() => {
-    changeFormDataValue(selected, 'checkoutKeys');
+    changeFormDataValue({
+      cloumns: checkoutAllList.filter((o) => selected.includes(o.value)),
+    });
   }, [selected.join(',')]);
 
   useEffect(() => {
@@ -180,10 +186,7 @@ const Index = ({ onChange: changeValue, value: initValue }) => {
         setExpandedKeys((v) => [...v, node.key]);
       }
     } else if (keys.length) {
-      changeFormDataValue(
-        { label: node?.title, value: node?.key },
-        'selectedKey',
-      );
+      changeFormDataValue({ label: node?.title, value: node?.key });
       setSelectedKeys(keys);
     }
   };
@@ -192,7 +195,7 @@ const Index = ({ onChange: changeValue, value: initValue }) => {
       <div className={styles.treeBox}>
         <div className={styles.title}>1. 选择输入源</div>
         <div className={styles.searchBox}>
-          <Input onChange={setSearchValue} placeholder="搜索数据源"></Input>
+          <SpInput onChange={setSearchValue} placeholder="搜索数据源"></SpInput>
         </div>
         <div style={{ height: 460 }}>
           {treeData?.length ? (
@@ -231,7 +234,7 @@ const Index = ({ onChange: changeValue, value: initValue }) => {
       <div className={styles.fontBox}>
         <div className={styles.title}>2. 选择字段</div>
         <div className={styles.searchBox}>
-          <Input
+          <SpInput
             onChange={(va) => {
               if (va) {
                 setCheckoutList((v) => v.filter((o) => o.label.includes(va)));
@@ -240,53 +243,55 @@ const Index = ({ onChange: changeValue, value: initValue }) => {
               }
             }}
             placeholder="搜索字段"
-          ></Input>
+          ></SpInput>
         </div>
-        <div style={{ height: 460, overflowY: 'auto' }}>
-          {checkoutList?.length ? (
-            <Row gutter={[20, 8]}>
-              <Col span={24}>
-                <Checkbox
-                  checked={allSelected}
-                  onClick={toggleAll}
-                  indeterminate={partiallySelected}
-                >
-                  全选
-                </Checkbox>
-              </Col>
-              {checkoutList.map((i) => (
-                <Col key={i.value} span={12}>
+        <Spin spinning={getTemplateDetailLoading}>
+          <div style={{ height: 460, overflowY: 'auto' }}>
+            {checkoutList?.length ? (
+              <Row gutter={[20, 8]}>
+                <Col span={24}>
                   <Checkbox
-                    checked={isSelected(i.value)}
-                    onClick={() => toggle(i.value)}
-                    value={i.value}
+                    checked={allSelected}
+                    onClick={toggleAll}
+                    indeterminate={partiallySelected}
                   >
-                    <div style={{ width: '200px' }}>
-                      <Paragraph
-                        style={{ marginBottom: 0 }}
-                        ellipsis={{
-                          tooltip: {
-                            title: '',
-                            color: '#fff',
-                            overlayInnerStyle: {
-                              color: '#000',
-                            },
-                          },
-                        }}
-                      >
-                        {i.label}
-                      </Paragraph>
-                    </div>
+                    全选
                   </Checkbox>
                 </Col>
-              ))}
-            </Row>
-          ) : (
-            <EmptyTreeNode
-              description={checkoutAllList?.length ? '暂无数据' : ''}
-            ></EmptyTreeNode>
-          )}
-        </div>
+                {checkoutList.map((i) => (
+                  <Col key={i.value} span={12}>
+                    <Checkbox
+                      checked={isSelected(i.value)}
+                      onClick={() => toggle(i.value)}
+                      value={i.value}
+                    >
+                      <div style={{ width: '200px' }}>
+                        <Paragraph
+                          style={{ marginBottom: 0 }}
+                          ellipsis={{
+                            tooltip: {
+                              title: '',
+                              color: '#fff',
+                              overlayInnerStyle: {
+                                color: '#000',
+                              },
+                            },
+                          }}
+                        >
+                          {i.label}
+                        </Paragraph>
+                      </div>
+                    </Checkbox>
+                  </Col>
+                ))}
+              </Row>
+            ) : (
+              <EmptyTreeNode
+                description={checkoutAllList?.length ? '暂无数据' : ''}
+              ></EmptyTreeNode>
+            )}
+          </div>
+        </Spin>
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
-import { Button, Drawer, Form, Input, Modal } from 'antd';
+import { NormalModal as Modal } from '@src/components/allCompontents/modalContent';
+import { Button, Drawer, Form, Input } from 'antd';
 import React, {
   forwardRef,
   useImperativeHandle,
@@ -11,7 +12,7 @@ import DrawerNode from './drawerNode';
 import styles from './index.module.less';
 
 const NodeConfig = (props, modalRef) => {
-  const { onOk, nodesDatas } = props;
+  const { onOk, changeNode } = props;
 
   const [form] = Form.useForm();
   const [nodeData, setNodeData] = useState({});
@@ -21,10 +22,14 @@ const NodeConfig = (props, modalRef) => {
   const [openDraw, setOpenDraw] = useState(false);
   const [nodeLabel, setNodeLabel] = useState('');
 
-  const onClose = () => {
+  const onClose = (type) => {
+    if (type === 'modal') {
+      form.resetFields();
+      setOpen(false);
+      return;
+    }
     setOpen(false);
     setOpenDraw(false);
-    form.resetFields();
   };
   const onOpen = (v, node) => {
     nodeRef.current = node;
@@ -33,19 +38,28 @@ const NodeConfig = (props, modalRef) => {
 
     setNodeData(v);
 
-    if (nodesDatas[v.id]) {
-      form.setFieldValue('data', nodesDatas[v.id]);
+    if (v?.config) {
+      form.setFieldValue('data', v?.config);
     }
-    if (v?.type === 'in' && !nodesDatas[v.id]) {
+    if (v?.type === 'in' && !v?.config) {
       setOpen(true);
     } else {
       setOpenDraw(true);
     }
   };
 
+  const openModal = () => {
+    setTimeout(() => {
+      if (nodeData?.config) {
+        form.setFieldValue('data', nodeData?.config);
+      }
+      setOpen(true);
+    }, 10);
+  };
+
   const onFinish = () => {
     const { data } = form.getFieldsValue();
-    onClose();
+    onClose('modal');
     if (onOk) {
       onOk(data, nodeRef.current);
     }
@@ -63,14 +77,14 @@ const NodeConfig = (props, modalRef) => {
         width={800}
         destroyOnClose
         open={open}
-        onCancel={onClose}
+        onCancel={() => onClose('modal')}
         forceRender
         bodyStyle={{ padding: '20px 20px 0 20px' }}
         footer={[
-          <Button key="back" onClick={onClose}>
+          <Button key="back" onClick={() => onClose('modal')}>
             取消
           </Button>,
-          <Button type="primary" key="back" onClick={onFinish}>
+          <Button type="primary" key="confirm" onClick={onFinish}>
             确认
           </Button>,
         ]}
@@ -82,6 +96,7 @@ const NodeConfig = (props, modalRef) => {
         </Form>
       </Modal>
       <Drawer
+        height={400}
         style={{ position: 'relative' }}
         bodyStyle={{ padding: 0 }}
         destroyOnClose
@@ -92,10 +107,20 @@ const NodeConfig = (props, modalRef) => {
             节点名称：
             <Input
               onPressEnter={() => {
-                nodeRef.current.prop('data', { ...nodeData, label: nodeLabel });
+                if (!nodeLabel) setNodeLabel(nodeData.label);
+                changeNode(
+                  { label: nodeLabel || nodeData.label },
+                  nodeData,
+                  nodeRef.current,
+                );
               }}
               onBlur={() => {
-                nodeRef.current.prop('data', { ...nodeData, label: nodeLabel });
+                if (!nodeLabel) setNodeLabel(nodeData.label);
+                changeNode(
+                  { label: nodeLabel || nodeData.label },
+                  nodeData,
+                  nodeRef.current,
+                );
               }}
               value={nodeLabel}
               onChange={(v) => {
@@ -118,7 +143,11 @@ const NodeConfig = (props, modalRef) => {
         open={openDraw}
         getContainer={false}
       >
-        <DrawerNode nodeData={nodeData}></DrawerNode>
+        <DrawerNode
+          changeNode={(v) => changeNode(v, nodeData, nodeRef.current)}
+          openModal={openModal}
+          nodeData={nodeData}
+        ></DrawerNode>
       </Drawer>
     </>
   );

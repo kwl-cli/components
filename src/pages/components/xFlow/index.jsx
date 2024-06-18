@@ -3,8 +3,8 @@ import { Dnd } from '@antv/x6-plugin-dnd';
 import { Keyboard } from '@antv/x6-plugin-keyboard';
 import { Selection } from '@antv/x6-plugin-selection';
 import { register } from '@antv/x6-react-shape';
+import SpInput from '@src/components/commonComp/submitSearch/SpInput';
 import { useFullscreen } from 'ahooks';
-import { Input } from 'antd';
 import { nanoid } from 'nanoid';
 import React, { useEffect, useRef, useState } from 'react';
 import Actions from './components/actions';
@@ -172,9 +172,6 @@ const Index = () => {
   const [cArrNodeList, setCArrNodeList] = useState(arrNode);
   const [currentCells, setCurrentCells] = useState({});
 
-  const [nodesDatas, setNodesDatas] = useState({});
-  const nodesDatasRef = useRef({});
-
   const initCells = (data) => {
     const arr = [];
     const obj = {
@@ -204,7 +201,15 @@ const Index = () => {
   // 删除元素
   const deleteCells = (graph) => {
     const cells = graph.getSelectedCells();
+
     if (cells.length) {
+      const edgeArr = cells.filter((o) => o.isEdge());
+      // 删除边时，去掉来源和目标的内部数据
+      if (edgeArr.length) {
+        edgeArr.forEach((i) => {
+          console.log('first', i.getAttrs());
+        });
+      }
       const arr = cells.map((i) => i.getData()).filter((o) => o);
 
       setCurrentCells((v) => {
@@ -298,7 +303,7 @@ const Index = () => {
 
           const valid = validataForEdge(
             sourceCellData,
-            nodesDatasRef.current?.[sourceCellData.id] || {},
+            sourceCellData?.config || {},
             sourceCell,
           );
           if (!valid) {
@@ -311,6 +316,29 @@ const Index = () => {
           ) {
             return false;
           }
+
+          // 连线成功，记录一下 来源、去向 数组
+          const targetCellData = targetCell.getData();
+
+          sourceCell.prop('data', {
+            ...sourceCellData,
+            targerObjs: [
+              ...new Set([
+                ...(sourceCellData?.targerObjs || []),
+                targetCellData.id,
+              ]),
+            ],
+          });
+
+          targetCell.prop('data', {
+            ...targetCellData,
+            sourceObjs: [
+              ...new Set([
+                ...(targetCellData?.sourceObjs || []),
+                sourceCellData.id,
+              ]),
+            ],
+          });
 
           return true;
         },
@@ -446,7 +474,7 @@ const Index = () => {
             marginBottom: 8,
           }}
         >
-          <Input
+          <SpInput
             placeholder="搜索组件"
             onChange={(v) => {
               if (v) {
@@ -460,7 +488,7 @@ const Index = () => {
               }
             }}
             style={{ width: 200 }}
-          ></Input>
+          ></SpInput>
         </div>
         {cArrNodeList.map((i) =>
           i?.type === 'title' ? (
@@ -496,19 +524,18 @@ const Index = () => {
         ></Actions>
         <div ref={ref}></div>
         <NodeConfig
-          nodesDatas={nodesDatas}
+          changeNode={(nodeLabel, nodeData, node) => {
+            node.prop('data', { ...nodeData, ...nodeLabel });
+          }}
           onOk={(va, nod) => {
             const da = nod.getData();
-            setNodesDatas((v) => ({ ...v, [da.id]: va }));
-            nodesDatasRef.current = {
-              ...nodesDatasRef.current,
-              [da.id]: va,
-            };
-            nod.prop('data', {
-              ...da,
-              label: va?.selectedKey?.label,
-              status: '',
-            });
+            if (va?.label)
+              nod.prop('data', {
+                ...da,
+                config: va,
+                label: va?.label,
+                status: '',
+              });
           }}
           ref={nodeRef}
         ></NodeConfig>
